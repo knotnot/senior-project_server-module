@@ -1,0 +1,26 @@
+*filter
+:INPUT DROP [0:0]
+:FORWARD DROP [0:0]
+:OUTPUT ACCEPT [0:0]
+
+# อนุญาต loopback
+-A INPUT -i lo -j ACCEPT
+
+# อนุญาต connection ที่สร้างแล้ว
+-A INPUT -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
+
+# ป้องกัน SYN flood ด้วย recent module
+-A INPUT -p tcp --syn --dport 80 -m recent --set --name syn_flood --rsource
+-A INPUT -p tcp --syn --dport 80 -m recent --update --seconds 1 --hitcount 20 --name syn_flood --rsource -j DROP
+
+# Limit ICMP (ping)
+-A INPUT -p icmp --icmp-type 8 -m hashlimit --hashlimit 100/sec --hashlimit-burst 20 --hashlimit-mode srcip --hashlimit-name icmp_limit -j ACCEPT
+
+# Limit HTTP (80)
+-A INPUT -p tcp --dport 80 -m conntrack --ctstate NEW -m hashlimit --hashlimit 500/sec --hashlimit-burst 50 --hashlimit-mode srcip --hashlimit-name http_limit -j ACCEPT
+
+# Limit HTTPS (443)
+-A INPUT -p tcp --dport 443 -m conntrack --ctstate NEW -m hashlimit --hashlimit 500/sec --hashlimit-burst 50 --hashlimit-mode srcip --hashlimit-name https_limit -j ACCEPT
+
+COMMIT
+

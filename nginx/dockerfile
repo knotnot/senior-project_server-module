@@ -1,0 +1,19 @@
+FROM ubuntu:latest
+
+RUN apt-get update && apt-get install -y nginx iptables python3 python3-pip python3-dev build-essential python3-venv
+
+RUN python3 -m venv /venv && /venv/bin/pip install --upgrade pip && /venv/bin/pip install onnxruntime joblib
+
+COPY nginx.conf /etc/nginx/nginx.conf
+COPY iptables.rules /etc/iptables.rules
+
+WORKDIR /model
+COPY detect.onnx /model/detect.onnx
+COPY predict.py /model/predict.py
+
+EXPOSE 80
+
+CMD iptables-restore < /etc/iptables.rules && nginx -g "daemon off;" && /venv/bin/python /model/predict.py
+
+
+

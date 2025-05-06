@@ -1,0 +1,33 @@
+version: "3.8"
+
+services:
+  flask1:
+    build:
+      context: ./flask_app
+    image: my_flask1
+    environment:
+      - HOSTNAME=flask1
+    ports:
+      - "5001:5000"  # Optional for debugging
+    privileged: true
+
+  flask2:
+    build:
+      context: ./flask_app
+    image: my_flask2
+    environment:
+      - HOSTNAME=flask2
+    ports:
+      - "5002:5000"  # Optional for debugging
+    privileged: true
+
+  nginx:
+    build:
+      context: ./nginx
+    image: my_nginx_ml
+    ports:
+      - "8080:80"
+    depends_on:
+      - flask1
+      - flask2
+    privileged: true

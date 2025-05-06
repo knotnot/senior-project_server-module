@@ -1,0 +1,20 @@
+-- สร้างฐานข้อมูล server
+CREATE DATABASE IF NOT EXISTS Proxy_data;
+
+-- ใช้งานฐานข้อมูล server
+USE Proxy_data;
+
+-- สร้างตาราง system_and_log_metrics
+CREATE TABLE system_and_log_metrics (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,  -- เวลาที่เก็บข้อมูล
+    load_average_1min FLOAT,  -- ค่าโหลดเฉลี่ยใน 1 นาที
+    cpu_us FLOAT,             -- เปอร์เซ็นต์การใช้ CPU สำหรับ user space
+    cpu_sy FLOAT,             -- เปอร์เซ็นต์การใช้ CPU สำหรับ system
+    cpu_si FLOAT,             -- เปอร์เซ็นต์การใช้ CPU สำหรับ soft IRQ
+    cpu_usage FLOAT,          -- คำนวณจาก 100 - %id
+    request_count INT         -- จำนวน request ในช่วงเวลา 5 วินาที
+);
+
+ALTER TABLE system_and_log_metrics
+ADD COLUMN label VARCHAR(255);

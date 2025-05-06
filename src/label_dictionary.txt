@@ -1,0 +1,14 @@
+normal traffic === normal curl , heavy traffic
+
+abnormal_traffic
+http-attack === Curl flood 3
+
+non-http-attack1 === TCP flood 3 (e.g. hping3 -S 10.0.0.4 -p 80 -i u1000)
+
+non-http-attack2 === TCP flood 2 Curl flood 1
+
+non-http-attack3 === TCP flood 1 Curl flood 2
+
+non-http-attack4 === TCP flood 1 Curl flood 1 icmp flood 1
+
+non-http-attack5 === TCP flood 1 icmp flood 2

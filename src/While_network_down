@@ -1,0 +1,9 @@
+# connect to ssid
+iwconfig attacker3-wlan0 essid ssid1
+
+# if state DOWN
+iw dev server1-wlan0 connect ssid1
+
+# iwconfig no found
+iw attacker3-wlan0 connect ssid1
+
